@@ -117,6 +117,16 @@ Expected output: `17 passed (29 assertions)`
 
 ---
 
+## Postman Collection
+
+A Postman collection file is included in this repository:
+
+`CarbonEthics-Backend-Intern.postman_collection.json`
+
+You can import it into Postman and test all available endpoints directly.
+
+---
+
 ## Request & Response Examples
 
 ### Login
@@ -219,6 +229,7 @@ Response:
 - **Middleware-based Role Control** keeps authorization concerns outside controller logic.
 - **Server-side Total Calculation** prevents client-side price manipulation.
 
+---
 
 ## Project Structure
 
