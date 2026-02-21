@@ -1,59 +1,249 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel E-Commerce API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A simple but production-ready e-commerce REST API built with **Laravel 12** and **Laravel Sanctum**.
 
-## About Laravel
+Covers authentication, role-based access control, product management, and order processing — designed to follow Laravel best practices and clean code principles.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+---
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2+
+- Composer
+- MySQL 8+ (or SQLite for testing)
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+```bash
+# 1. Clone the repository
+git clone https://github.com/yourname/laravel-ecommerce-api.git
+cd laravel-ecommerce-api
 
-## Laravel Sponsors
+# 2. Install dependencies
+composer install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+# 3. Copy environment file
+cp .env.example .env
 
-### Premium Partners
+# 4. Generate application key
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+---
 
-## Contributing
+## Environment Setup
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Open `.env` and configure your database:
 
-## Code of Conduct
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=ecommerce
+DB_USERNAME=root
+DB_PASSWORD=
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Database Setup
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+# Run migrations
+php artisan migrate
 
-## License
+# Seed with admin account + sample products
+php artisan migrate --seed
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Default admin credentials after seeding:
+
+| Field    | Value             |
+| -------- | ----------------- |
+| Email    | admin@example.com |
+| Password | password          |
+
+---
+
+## Running the API
+
+```bash
+php artisan serve
+# Available at: http://localhost:8000
+```
+
+---
+
+## Running Tests
+
+Tests run on an **SQLite in-memory database** — no setup required.
+
+```bash
+php artisan test
+```
+
+Expected output: `17 passed (29 assertions)`
+
+---
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint    | Auth   | Description              |
+| ------ | ----------- | ------ | ------------------------ |
+| POST   | /api/login  | —      | Login, returns API token |
+| POST   | /api/logout | Bearer | Revoke current token     |
+
+### Products
+
+| Method | Endpoint           | Auth   | Role   |
+| ------ | ------------------ | ------ | ------ |
+| GET    | /api/products      | —      | Public |
+| GET    | /api/products/{id} | —      | Public |
+| POST   | /api/products      | Bearer | Admin  |
+| PUT    | /api/products/{id} | Bearer | Admin  |
+| DELETE | /api/products/{id} | Bearer | Admin  |
+
+### Orders
+
+| Method | Endpoint         | Auth   | Role   |
+| ------ | ---------------- | ------ | ------ |
+| POST   | /api/orders      | —      | Public |
+| GET    | /api/orders      | Bearer | Admin  |
+| GET    | /api/orders/{id} | Bearer | Admin  |
+
+---
+
+## Request & Response Examples
+
+### Login
+
+```
+POST /api/login
+Content-Type: application/json
+
+{
+    "email": "admin@example.com",
+    "password": "password"
+}
+```
+
+Response:
+
+```json
+{
+    "data": {
+        "token": "1|abc...",
+        "user": {
+            "id": 1,
+            "name": "Admin",
+            "email": "admin@example.com",
+            "role": "admin"
+        }
+    }
+}
+```
+
+### Create Product (Admin)
+
+```
+POST /api/products
+Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+    "name": "Laptop Pro 15",
+    "description": "High-performance laptop",
+    "price": 15000000,
+    "status": "active"
+}
+```
+
+### Create Order (Public)
+
+```
+POST /api/orders
+Content-Type: application/json
+
+{
+    "customer_name": "Budi Santoso",
+    "customer_email": "budi@mail.com",
+    "items": [
+        { "product_id": 1, "qty": 2 }
+    ]
+}
+```
+
+Response:
+
+```json
+{
+    "data": {
+        "id": 1,
+        "customer_name": "Budi Santoso",
+        "status": "pending",
+        "total_price": 30000000,
+        "items": [
+            {
+                "product_id": 1,
+                "product": "Laptop Pro 15",
+                "qty": 2,
+                "price": 15000000,
+                "subtotal": 30000000
+            }
+        ]
+    }
+}
+```
+
+---
+
+## Business Rules
+
+- **Active products only** — orders with inactive product IDs are rejected with `422`
+- **Price snapshot** — `order_items.price` stores the product price at the time of purchase, not a reference
+- **Auto-calculated totals** — `subtotal = qty × price`, `total_price` is the sum of all subtotals
+- **DB Transaction** — entire order creation is wrapped in a transaction; any failure rolls back completely
+- **Role-based access** — admin routes return `403` for regular users
+
+---
+
+## Project Structure
+
+```
+app/
+├── Http/
+│   ├── Controllers/Api/
+│   │   ├── AuthController.php
+│   │   ├── ProductController.php
+│   │   └── OrderController.php
+│   ├── Middleware/
+│   │   └── AdminMiddleware.php
+│   ├── Requests/
+│   │   ├── Auth/LoginRequest.php
+│   │   ├── Product/StoreProductRequest.php
+│   │   ├── Product/UpdateProductRequest.php
+│   │   └── Order/StoreOrderRequest.php
+│   └── Resources/
+│       ├── ProductResource.php
+│       ├── OrderResource.php
+│       └── OrderItemResource.php
+├── Models/
+│   ├── User.php
+│   ├── Product.php
+│   ├── Order.php
+│   └── OrderItem.php
+database/
+├── factories/
+├── migrations/
+└── seeders/
+routes/
+└── api.php
+tests/Feature/
+├── AuthTest.php
+├── ProductTest.php
+└── OrderTest.php
+```
