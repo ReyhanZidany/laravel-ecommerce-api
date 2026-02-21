@@ -211,6 +211,15 @@ Response:
 
 ---
 
+## Architecture Decisions
+
+- **DB Transaction** is used during order creation to ensure atomic operations — preventing partial order persistence.
+- **Price Snapshot** ensures historical accuracy when product prices change in the future.
+- **Form Request Classes** separate validation logic from controllers to maintain clean architecture.
+- **Middleware-based Role Control** keeps authorization concerns outside controller logic.
+- **Server-side Total Calculation** prevents client-side price manipulation.
+
+
 ## Project Structure
 
 ```
