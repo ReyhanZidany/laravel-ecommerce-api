@@ -18,7 +18,7 @@ Covers authentication, role-based access control, product management, and order 
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/yourname/laravel-ecommerce-api.git
+git clone https://github.com/ReyhanZidany/laravel-ecommerce-api.git
 cd laravel-ecommerce-api
 
 # 2. Install dependencies
@@ -35,7 +35,7 @@ php artisan key:generate
 
 ## Environment Setup
 
-Open `.env` and configure your database:
+Open `.env` and configure database:
 
 ```env
 DB_CONNECTION=mysql
